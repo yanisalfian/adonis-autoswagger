@@ -621,7 +621,7 @@ export class AutoSwagger {
   private parseResponse(line) {
     let responses = {};
     line = line.replace("@responseBody ", "");
-    let [status, res] = line.split(" - ");
+    let [status, res, desc] = line.split(" - ");
     let sum = "";
     if (typeof status === "undefined") return;
     responses[status] = {};
@@ -702,7 +702,7 @@ export class AutoSwagger {
         res += ". Take a look at the example for further details.";
       }
     }
-    responses[status]["description"] = res;
+    responses[status]["description"] = desc || res;
     // responses[status]['summary'] = sum
     return responses;
   }
