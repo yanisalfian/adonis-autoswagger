@@ -301,7 +301,7 @@ export class AutoSwagger {
           if (
             typeof responses[responseCodes[method]] !== "undefined" &&
             typeof responses[responseCodes[method]]["description"] !==
-              "undefined"
+            "undefined"
           ) {
             description = responses[responseCodes[method]]["description"];
           }
@@ -329,11 +329,11 @@ export class AutoSwagger {
             sourceFile === "" && action == ""
               ? summary + " (route.ts)"
               : summary +
-                " (" +
-                sourceFile.replace("App/Controllers/Http/", "") +
-                "::" +
-                action +
-                ")",
+              " (" +
+              sourceFile.replace("App/Controllers/Http/", "") +
+              "::" +
+              action +
+              ")",
           description: description,
           parameters: parameters,
           tags: tags,
@@ -656,7 +656,7 @@ export class AutoSwagger {
         let app = {};
         try {
           app = JSON.parse("{" + append + "}");
-        } catch {}
+        } catch { }
 
         res = sum = "Returns a **single** instance of type `" + ref + "`";
         // references a schema array
@@ -726,7 +726,7 @@ export class AutoSwagger {
           let app = {};
           try {
             app = JSON.parse("{" + append + "}");
-          } catch {}
+          } catch { }
 
           // references a schema array
           if (ref.includes("[]")) {
@@ -786,7 +786,7 @@ export class AutoSwagger {
       let app = {};
       try {
         app = JSON.parse("{" + append + "}");
-      } catch {}
+      } catch { }
 
       // references a schema array
       if (ref.includes("[]")) {
@@ -1067,6 +1067,7 @@ export class AutoSwagger {
     let interfaces = {};
     let name = "";
     let props = {};
+    let required = []
     // remove empty lines
     data = data.replace(/\t/g, "").replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, "");
     const lines = data.split("\n");
@@ -1097,6 +1098,7 @@ export class AutoSwagger {
         if (name === "") return;
         interfaces[name] = {
           type: "object",
+          required: required,
           properties: props,
           description: "Interface",
         };
@@ -1158,6 +1160,7 @@ export class AutoSwagger {
       if (enums.length > 0) {
         props[field]["enum"] = enums;
       }
+      if (!notRequired) required.push(field)
     });
 
     return interfaces;

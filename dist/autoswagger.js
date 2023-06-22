@@ -897,7 +897,7 @@ class AutoSwagger {
         return __awaiter(this, void 0, void 0, function* () {
             const models = {};
             const p = path.join(this.options.path, "/Models");
-            if (!(0, fs_1.existsSync)(p)) {
+            if (!fs_1.existsSync(p)) {
                 return models;
             }
             const files = yield this.getFiles(p, []);
@@ -922,7 +922,7 @@ class AutoSwagger {
         return __awaiter(this, void 0, void 0, function* () {
             let interfaces = {};
             const p = path.join(this.options.path, "/Interfaces");
-            if (!(0, fs_1.existsSync)(p)) {
+            if (!fs_1.existsSync(p)) {
                 return interfaces;
             }
             const files = yield this.getFiles(p, []);
@@ -942,6 +942,7 @@ class AutoSwagger {
         let interfaces = {};
         let name = "";
         let props = {};
+        let required = [];
         // remove empty lines
         data = data.replace(/\t/g, "").replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, "");
         const lines = data.split("\n");
@@ -968,6 +969,7 @@ class AutoSwagger {
                     return;
                 interfaces[name] = {
                     type: "object",
+                    required: required,
                     properties: props,
                     description: "Interface",
                 };
@@ -1000,7 +1002,7 @@ class AutoSwagger {
             field = field.trim();
             type = type.trim();
             if (this.options.snakeCase) {
-                field = (0, change_case_1.snakeCase)(field);
+                field = change_case_1.snakeCase(field);
             }
             let isArray = false;
             if (type.includes("[]")) {
@@ -1024,6 +1026,8 @@ class AutoSwagger {
             if (enums.length > 0) {
                 props[field]["enum"] = enums;
             }
+            if (!notRequired)
+                required.push(field);
         });
         return interfaces;
     }
@@ -1094,7 +1098,7 @@ class AutoSwagger {
             field = field.replace("get ", "");
             type = type.replace("{", "");
             if (this.options.snakeCase) {
-                field = (0, change_case_1.snakeCase)(field);
+                field = change_case_1.snakeCase(field);
             }
             let indicator = "type";
             if (example === null) {
